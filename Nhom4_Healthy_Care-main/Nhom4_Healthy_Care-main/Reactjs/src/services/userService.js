@@ -49,6 +49,7 @@ const getAllSpecialty = () => {
   return axios.get("/api/get-all-specialty");
 };
 const saveBulkScheduleDoctor = (data) => {
+  console.log("cai datane:",data);
   return axios.post("/api/bulk-create-schedule", data);
 };
 const getScheduleDoctorByDate = (doctorId, date) => {

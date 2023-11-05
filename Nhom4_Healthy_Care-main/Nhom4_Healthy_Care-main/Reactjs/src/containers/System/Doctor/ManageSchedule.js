@@ -34,7 +34,7 @@ class ManageSchedule extends Component {
     if (prevProps.allScheduleTime !== this.props.allScheduleTime) {
       let data = this.props.allScheduleTime;
       if (data && data.length > 0) {
-        data = data.map((item) => ({ ...item, isSelected: false }));
+        data = data.map(item => ({ ...item, isSelected: false }));
       }
       this.setState({
         rangeTime: data,
@@ -96,7 +96,7 @@ class ManageSchedule extends Component {
         selectedTime.map((schedule, index) => {
           let object = {};
           object.doctorId = selectedDoctor.value;
-          object.data = formatedDate;
+          object.date = formatedDate;
           object.timeType = schedule.keyMap;
           result.push(object);
         });
@@ -105,12 +105,17 @@ class ManageSchedule extends Component {
         return;
       }
     }
+    console.log("xem thong tin 1",result);
+    console.log("xem thong tin 2",selectedDoctor.value);
+    console.log("xem thong tin 3",formatedDate);
     let res = await saveBulkScheduleDoctor({
       arrSchedule: result,
       doctorId: selectedDoctor.value,
       formatedDate: formatedDate,
     });
+    console.log("xem thong tin res",res);
   };
+  
   render() {
     let { rangeTime } = this.state;
     let { language } = this.props;
@@ -163,12 +168,13 @@ class ManageSchedule extends Component {
                 })}
             </div>
             <div className="col-12">
-              <button
-                className="btn btn-primary btn-save-schedule"
-                onClick={() => this.handleSaveSchedule}
-              >
-                <FormattedMessage id="manage-schedule.save" />
-              </button>
+            <button
+  className="btn btn-primary btn-save-schedule"
+  onClick={() => this.handleSaveSchedule()} // Add parentheses here
+>
+  <FormattedMessage id="manage-schedule.save" />
+</button>
+
             </div>
           </div>
         </div>
@@ -187,7 +193,13 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+
+    fetchAllDoctors:()=> dispatch(actions.fetchAllDoctor()),
+    fetchAllScheduleTime:()=> dispatch(actions.fetchAllScheduleTime()),
+   
+
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageSchedule);
