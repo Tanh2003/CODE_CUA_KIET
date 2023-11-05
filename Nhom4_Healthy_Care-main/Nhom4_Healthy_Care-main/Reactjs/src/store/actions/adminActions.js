@@ -304,3 +304,50 @@ export const saveDetaiDatalDoctor = (data) => {
     }
   };
 };
+
+
+
+
+
+
+
+
+export const getAllRequiredDoctorInfor = () => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+          type:actionTypes.FETCH_REQUIRED_DOCTOR_PRICE_START
+      })
+      let resPrice = await getAllCodeService("PRICE");
+      let resPayment = await getAllCodeService("PAYMENT");
+      let resProvince = await getAllCodeService("PROVINCE");
+      if (resPrice && resPrice.errcode === 0&&
+        resPayment&&resPayment.errcode===0&& resProvince&&resProvince.errcode===0
+        ) {
+          let data={
+            resPrice:resPrice.data,
+            resPayment:resPayment.data,
+            resProvince:resProvince.data
+          }
+        dispatch(fetchRequiredDoctorInforSucess(data));
+      } else {
+        dispatch(fetchRequiredDoctorInforFailed());
+     
+      }
+    } catch (e) {
+      dispatch(fetchRequiredDoctorInforFailed());
+      console.log("RequiredDoctorInfor error",e);
+    }
+  };
+};
+
+
+
+export const fetchRequiredDoctorInforSucess = (allrequiredData) => ({
+  type: actionTypes.FETCH_REQUIRED_DOCTOR_PRICE_SUCCESS,
+  data: allrequiredData,
+});
+
+export const fetchRequiredDoctorInforFailed= () => ({
+  type: actionTypes.FETCH_REQUIRED_DOCTOR_PRICE_FAIDED,
+});

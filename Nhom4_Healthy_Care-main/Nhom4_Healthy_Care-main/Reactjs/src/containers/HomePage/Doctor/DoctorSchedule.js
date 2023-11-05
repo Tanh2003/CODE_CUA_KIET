@@ -6,6 +6,8 @@ import moment from "moment/moment";
 import localization from "moment/locale/vi";
 import { LANGUAGES } from "../../../utils";
 import { getScheduleDoctorByDate } from "../../../services/userService";
+
+import { FormattedMessage } from "react-intl";
 class DoctorSchedule extends Component {
   constructor(props) {
     super(props);
@@ -16,24 +18,42 @@ class DoctorSchedule extends Component {
   }
   async componentDidMount() {
     let { language } = this.props;
-    this.setArrDays(language);
+    let allDays=this.getArrDays(language);
+    this.setState({
+      allDays:allDays,
+    })
+    // this.setArrDays(language);
   }
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  setArrDays = (language) => {
+  getArrDays = (language) => {
     let allDays = [];
     for (let i = 0; i < 7; i++) {
       let object = {};
       if (language === LANGUAGES.VI) {
-        // object.label = moment(new Date()).add(i, "days").format("dddd - DD/MM");
-        let labelVi = moment(new Date()).add(i, "days").format("dddd - DD/MM");
-        object.label = this.capitalizeFirstLetter(labelVi);
-      } else {
-        object.label = moment(new Date())
-          .add(i, "days")
-          .locale("en")
-          .format("ddd - DD/MM");
+
+if(i===0){
+  let ddMM=moment(new Date()).format("DD/MM");
+  let today=`Hôm nay - ${ddMM}`;
+   object.label =today;
+}else{
+   // object.label = moment(new Date()).add(i, "days").format("dddd - DD/MM");
+   let labelVi = moment(new Date()).add(i, "days").format("dddd - DD/MM");
+   object.label = this.capitalizeFirstLetter(labelVi);
+}
+
+} else {
+  if(i===0){
+    let ddMM=moment(new Date()).format("DD/MM");
+    let today=`Today - ${ddMM}`;
+     object.label =today;
+  }else{
+    object.label = moment(new Date())
+    .add(i, "days")
+    .locale("en")
+    .format("ddd - DD/MM");
+  }
       }
       object.value = moment(new Date()).add(i, "days").startOf("day").valueOf();
       allDays.push(object);
@@ -41,10 +61,22 @@ class DoctorSchedule extends Component {
     this.setState({
       allDays: allDays,
     });
+    return allDays;
   };
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.language !== prevProps.language) {
-      this.setArrDays(this.props.language);
+      let allDays =this.getArrDays(this.props.language);
+      
+      this.setState({
+        allDays:allDays,
+      })
+    }
+    if(this.props.doctorIdFromParent!==prevProps.doctorIdFromParent){
+      let allDays =this.getArrDays(this.props.language);
+      let res= await getScheduleDoctorByDate(this.props.doctorIdFromParent,allDays[0].value);
+this.setState({
+  allAvalableTime:res.data?res.data:[]
+})
     }
   }
   handleOnChangeSelect = async (event) => {
@@ -84,20 +116,39 @@ class DoctorSchedule extends Component {
             </i>
           </div>
           <div className="time-content">
-            {allAvalableTime && allAvalableTime.length > 0 ? (
-              allAvalableTime.map((item, index) => {
+            {allAvalableTime && allAvalableTime.length > 0 ?
+            <>
+            
+            <div className="time-content-btns">
+            {allAvalableTime.map((item, index) => {
                 let timeDisplay =
                   language === LANGUAGES.VI
                     ? item.timeTypeData.valueVi
                     : item.timeTypeData.valueEn;
-                return <button key={index}>{timeDisplay}</button>;
+                return (<button key={index}>{timeDisplay}</button>)
               })
-            ) : (
-              <div>
+            }
+
+
+
+
+            </div>
+         <div className="book-free">
+          <span>
+            chọn
+            <i className="fas fa-hand-point-up mr-2 ml-2"></i>
+             và đặt (miễn phí)
+
+          </span>
+         </div>
+              
+            </>
+            :
+              <div className="no-schedule">
                 không có lịch hẹn trong thời gian này, Vui lòng chọn thời gian
                 khác
               </div>
-            )}
+            }
           </div>
         </div>
       </div>
