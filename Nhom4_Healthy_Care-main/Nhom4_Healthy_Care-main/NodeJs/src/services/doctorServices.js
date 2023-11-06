@@ -67,7 +67,13 @@ let saveDetailInforDoctor = (InputData) => {
         !InputData.doctorId ||
         !InputData.contentHTML ||
         !InputData.contentMarkdown ||
-        !InputData.action
+        !InputData.action||
+        !InputData.selectedPrice||
+        !InputData.selectedPayment||
+        !InputData.selectedProvince||
+        !InputData.nameClinic||
+        !InputData.addressClinic||
+        !InputData.note
       ) {
         resolve({
           errcode: 1,
@@ -94,6 +100,40 @@ let saveDetailInforDoctor = (InputData) => {
 
             await doctorMarkdown.save();
           }
+        }
+
+        //upsert to Doctor_info table
+
+        let doctorInfor=await db.Doctor_Infor.findOne({
+          where:{
+            doctorId:InputData.doctorId,
+          },
+          raw:true
+        })
+        if(doctorInfor){
+          doctorInfor.doctorId=InputData.doctorId;
+          doctorInfor.priceId=InputData.selectedPrice;
+          doctorInfor.provinceId=InputData.selectedPrice;
+          doctorInfor.paymentId=InputData.selectedPayment;
+          doctorInfor.nameClinic=InputData.nameClinic;
+          doctorInfor.addressClinic=InputData.addressClinic;
+          doctorInfor.note=InputData.note;
+          
+          await doctorInfor.save()
+
+
+        }else{
+          await db.Doctor_Infor.create({
+            doctorId:InputData.doctorId,
+            priceId:InputData.selectedPrice,
+            provinceId:InputData.selectedPrice,
+            paymentId:InputData.selectedPayment,
+            nameClinic:InputData.nameClinic,
+            addressClinic:InputData.addressClinic,
+            note:InputData.note,
+
+          })
+
         }
 
         resolve({
@@ -184,16 +224,16 @@ let bulkCreateSchedule = (data) => {
         });
 
 
-        //convert date
-        if (existing && existing.length > 0) {
-          existing = existing.map(item => {
-            item.date = new Date(item.date).getTime();
-            return item;
-          });
-        }
+        // //convert date
+        // if (existing && existing.length > 0) {
+        //   existing = existing.map(item => {
+        //     item.date = new Date(item.date).getTime();
+        //     return item;
+        //   });
+        // }
         let toCreate = _.differenceWith(schedule, existing, (a,b) => {
-          return a.timeType === b.timeType && a.date === b.date;
-          // return a.timeType === b.timeType && +a.date === +b.date;
+          // return a.timeType === b.timeType && a.date === b.date;
+          return a.timeType === b.timeType && +a.date === +b.date;
         });
 
 

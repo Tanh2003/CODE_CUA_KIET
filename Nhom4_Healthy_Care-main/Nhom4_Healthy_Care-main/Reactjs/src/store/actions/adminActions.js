@@ -329,6 +329,8 @@ export const getAllRequiredDoctorInfor = () => {
             resPayment:resPayment.data,
             resProvince:resProvince.data
           }
+
+          
         dispatch(fetchRequiredDoctorInforSucess(data));
       } else {
         dispatch(fetchRequiredDoctorInforFailed());
