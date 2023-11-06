@@ -42,7 +42,7 @@ class ManageDoctor extends Component {
     this.props.getAllRequiredDoctorInfor();
   }
   buildDataInputSelect = (inputdata, type) => {
-    console.log("xemmmm cai nayfzczczx :",inputdata)
+    console.log("xemmmm cai nayfzczczx :", inputdata);
     let result = [];
     let { language } = this.props;
     if (inputdata && inputdata.length > 0) {
@@ -65,8 +65,6 @@ class ManageDoctor extends Component {
           object.label = language == LANGUAGES.VI ? labelVi : labelEn;
           object.value = item.keyMap;
 
-
-  
           result.push(object);
         });
       }
@@ -115,7 +113,7 @@ class ManageDoctor extends Component {
     ) {
       let { resPayment, resPrice, resProvince } =
         this.props.allRequiredDoctorInfor;
-       
+
       let dataSelectPrice = this.buildDataInputSelect(resPrice, "PRICE");
       let dataSelectPayment = this.buildDataInputSelect(resPayment, "PAYMENT");
       let dataSelectProvince = this.buildDataInputSelect(
@@ -127,7 +125,6 @@ class ManageDoctor extends Component {
         listPayment: dataSelectPayment,
         listProvince: dataSelectProvince,
       });
-   
     }
     if (prevProps.language !== this.props.language) {
       let dataSelect = this.buildDataInputSelect(
@@ -159,6 +156,11 @@ class ManageDoctor extends Component {
 
   handleSaveContenMarkDown = () => {
     let { hanOldData } = this.state;
+    console.log("selectedPrice: ", this.state.selectedPrice);
+    console.log("selectedPayment: ", this.state.selectedPayment);
+    console.log("selectedProvince: ", this.state.selectedProvince);
+    
+    console.log("xemmmm value",this.state.selectedPrice.value)
 
     this.props.saveDetaiDatalDoctorRedux({
       contentHTML: this.state.contentHTML,
@@ -178,16 +180,51 @@ class ManageDoctor extends Component {
   handleChangeSelect = async (selectedOption) => {
     console.log("xem options", selectedOption.value);
     this.setState({ selectedOption });
+    let { listPayment, listPrice, listProvince } = this.state;
 
     let res = await getDetailInforDoctor(selectedOption.value);
 
     if (res && res.errcode === 0 && res.data.Markdown) {
       let markdown = res.data.Markdown;
+      let addressClinic = "",
+        nameClinic = "",
+        note = "",
+        paymentId = "",
+        priceId = "",
+        provinceId = "",
+        selectedPayment = "",
+        selectedPrice = "",
+        selectedProvince = "";
+console.log("xem neeeeeeee",res.data.Doctor_Infor);
+      if (res.data.Doctor_Infor) {
+        addressClinic = res.data.Doctor_Infor.addressClinic;
+        nameClinic = res.data.Doctor_Infor.nameClinic;
+        note = res.data.Doctor_Infor.note;
+        paymentId = res.data.Doctor_Infor.paymentId;
+        provinceId = res.data.Doctor_Infor.provinceId;
+        priceId = res.data.Doctor_Infor.priceId;
+
+        selectedPayment = listPayment.find((item) => {
+          return item && item.value === paymentId;
+        });
+        selectedPrice = listPrice.find((item) => {
+          return item && item.value === priceId;
+        });
+        selectedProvince = listProvince.find((item) => {
+          return item && item.value === provinceId;
+        });
+      }
       this.setState({
         contentHTML: markdown.contentHTML,
         contentMarkdown: markdown.contentMarkdown,
         description: markdown.description,
         hanOldData: true,
+        addressClinic: addressClinic,
+        nameClinic: nameClinic,
+        note: note,
+        selectedPayment: selectedPayment,
+        selectedPrice: selectedPrice,
+        selectedProvince: selectedProvince,
       });
     } else {
       this.setState({
@@ -195,6 +232,9 @@ class ManageDoctor extends Component {
         contentMarkdown: "",
         description: "",
         hanOldData: false,
+        addressClinic: "",
+        nameClinic: "",
+        note: "",
       });
     }
     console.log("xem selectoption", selectedOption);

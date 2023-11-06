@@ -1,6 +1,4 @@
 import db from "../models/index";
-
-
 require("dotenv").config();
 import _ from "lodash";
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
@@ -110,23 +108,24 @@ let saveDetailInforDoctor = (InputData) => {
           },
           raw:true
         })
-        if(doctorInfor){
-          doctorInfor.doctorId=InputData.doctorId;
-          doctorInfor.priceId=InputData.selectedPrice;
-          doctorInfor.provinceId=InputData.selectedPrice;
-          doctorInfor.paymentId=InputData.selectedPayment;
-          doctorInfor.nameClinic=InputData.nameClinic;
-          doctorInfor.addressClinic=InputData.addressClinic;
-          doctorInfor.note=InputData.note;
-          
-          await doctorInfor.save()
-
-
-        }else{
+        if (doctorInfor) {
+          await db.Doctor_Infor.update({
+            priceId: InputData.selectedPrice,
+            provinceId: InputData.selectedProvince,
+            paymentId: InputData.selectedPayment,
+            nameClinic: InputData.nameClinic,
+            addressClinic: InputData.addressClinic,
+            note: InputData.note,
+          }, {
+            where: {
+              doctorId: InputData.doctorId
+            }
+          });
+        } else{
           await db.Doctor_Infor.create({
             doctorId:InputData.doctorId,
             priceId:InputData.selectedPrice,
-            provinceId:InputData.selectedPrice,
+            provinceId:InputData.selectedProvince,
             paymentId:InputData.selectedPayment,
             nameClinic:InputData.nameClinic,
             addressClinic:InputData.addressClinic,
@@ -168,10 +167,21 @@ let getDetailDoctorById = (inputId) => {
               attributes: ["description", "contentHTML", "contentMarkdown"],
             },
             {
-              model: db.Allcode,
+              model:db.Allcode,
               as: "positionData",
               attributes: ["valueEn", "valueVi"],
             },
+            {
+              model:db.Doctor_Infor,
+              attributes:{
+                exclude:['id','doctorId']
+              },
+              include:[
+                {model:db.Allcode,as:'priceTypeData',attributes:['valueEn','valueVi']},
+                {model:db.Allcode,as:'provinceTypeData',attributes:['valueEn','valueVi']},
+                {model:db.Allcode,as:'paymentTypeData',attributes:['valueEn','valueVi']},
+              ]
+            }
           ],
           raw: false,
           nest: true,
