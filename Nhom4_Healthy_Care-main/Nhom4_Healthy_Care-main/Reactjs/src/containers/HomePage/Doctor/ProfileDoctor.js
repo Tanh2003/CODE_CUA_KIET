@@ -4,8 +4,10 @@ import { Modal } from "reactstrap";
 import {getProfileDoctorById} from "../../../services/userService";
 import { NumericFormat } from 'react-number-format';
 import { LANGUAGES } from "../../../utils/constant";
+import _ from "lodash";
+import moment from "moment/moment";
 
-
+import "./ProfileDoctor.scss";
 
 
 class ProfileDoctor extends Component {
@@ -36,9 +38,42 @@ class ProfileDoctor extends Component {
   }
   componentDidUpdate(prevProps, prevState, snapshot) {}
 
+
+renderTimeBooking = (dataTime)=>{
+  let {language}=this.props;
+  if(dataTime&&!_.isEmpty(dataTime)){
+    let time=language===LANGUAGES.VI?
+    dataTime.timeTypeData.valueVi:dataTime.timeTypeData.En;
+
+    let date =language===LANGUAGES.VI?
+    moment.unix(+dataTime.date/1000).format('dddd - DD/MM/YYYY')
+    :
+    moment.unix(+dataTime.date/1000).locale('en').format('ddd-MM/DD/YYYY')
+return(
+  <>
+  <div>{time}-{date}</div>
+  <div>Miễn phí đặt lịch</div>
+  
+  </>
+)
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
   render() {
 let {dataProfile}=this.state;
-let { language } = this.props;
+let { language,ishowDescriptionDoctor,dataTime } = this.props;
 let nameVi = "",
 nameEn = "";
 if(dataProfile && dataProfile.positionData){
@@ -64,9 +99,20 @@ if(dataProfile && dataProfile.positionData){
                 {language === LANGUAGES.VI ? nameVi : nameEn}
               </div>
               <div className="down">
+                {ishowDescriptionDoctor===true?
+                <>
+                
                 {dataProfile.Markdown && dataProfile.Markdown.description && (
                   <span>{dataProfile.Markdown.description}</span>
                 )}
+                </>
+                :
+                <>
+                {this.renderTimeBooking(dataTime)}
+                
+                </>
+              }
+                
               </div>
             </div>
 
