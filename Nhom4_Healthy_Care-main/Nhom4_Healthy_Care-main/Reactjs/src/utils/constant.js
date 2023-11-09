@@ -10,7 +10,8 @@ export const path = {
     DETAIL_DOCTOR:'/detail-doctor/:id',
     INTRODUCTION:'/introduction',
     INFORUSER:'/information',
-    LiSTCLINIC:'/listclinic'
+    LiSTCLINIC:'/listclinic',
+    VERIFY_EMAIL_BOOKING:"/verify-booking"
    
 };
 

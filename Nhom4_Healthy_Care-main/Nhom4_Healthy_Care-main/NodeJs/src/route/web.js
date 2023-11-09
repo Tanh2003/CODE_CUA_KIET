@@ -51,6 +51,8 @@ let initWebRouters = (app) => {
     "/api/get-profile-infor-doctor-by-id",
     doctorController.getProfileInforDoctor
   );
+  //api gui email
+  router.post("/api/veryfy-book-appoiment",patientController.postVeryfyBookAppointment);
 
   //api cua chuyen khoa
   router.post("/api/create-new-specialty", specialtyController.createSpecialty);

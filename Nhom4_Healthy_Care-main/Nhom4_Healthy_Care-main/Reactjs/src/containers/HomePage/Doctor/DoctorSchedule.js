@@ -128,6 +128,8 @@ closeBookingClose=()=>{
   render() {
     let { allDays, allAvalableTime,isOpenModalBooking,dataScheuleTimeModal } = this.state;
     let { language } = this.props;
+
+    console.log("sgsggdhaasdsadasd", allAvalableTime);
     return (
       <>
       <div className="doctor-schedule-container">
@@ -152,6 +154,8 @@ closeBookingClose=()=>{
           </div>
           <div className="time-content">
             {allAvalableTime && allAvalableTime.length > 0 ?
+
+            
             <>
             
             <div className="time-content-btns">

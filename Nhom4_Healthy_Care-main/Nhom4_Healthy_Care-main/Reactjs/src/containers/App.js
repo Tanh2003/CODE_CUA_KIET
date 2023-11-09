@@ -23,6 +23,7 @@ import Introduction from './HomePage/Introduction';
 
 import InfoUser from "./HomePage/HomeUser/InfoUser";
 import ListClinic from './HomePage/Clinic/ListClinic';
+import VerifyEmail from './System/Doctor/VerifyEmail.js';
 
 
 
@@ -69,6 +70,7 @@ class App extends Component {
                                 <Route path={path.DETAIL_DOCTOR} component={DetailDoctor}/> 
                                 <Route path={path.INFORUSER} component={InfoUser}/> 
                                 <Route path={path.LiSTCLINIC} component={ListClinic}/> 
+                                <Route path={path.VERIFY_EMAIL_BOOKING} component={VerifyEmail}/> 
                                 
                             </Switch>
                         </span>
