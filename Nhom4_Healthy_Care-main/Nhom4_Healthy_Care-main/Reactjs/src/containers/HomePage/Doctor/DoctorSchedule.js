@@ -6,6 +6,7 @@ import moment from "moment/moment";
 import localization from "moment/locale/vi";
 import { LANGUAGES } from "../../../utils";
 import { getScheduleDoctorByDate } from "../../../services/userService";
+import BookingModal from "./BookingModal";
 
 import { FormattedMessage } from "react-intl";
 class DoctorSchedule extends Component {
@@ -14,6 +15,8 @@ class DoctorSchedule extends Component {
     this.state = {
       allDays: [],
       allAvalableTime: [],
+      isOpenModalBooking:false,
+      dataScheuleTimeModal:{}
     };
   }
   async componentDidMount() {
@@ -91,10 +94,42 @@ this.setState({
       }
     }
   };
+
+
+handleClickScheduleTime=(time)=>{
+  this.setState({
+    isOpenModalBooking:true,
+    dataScheuleTimeModal:time
+  })
+}
+
+closeBookingClose=()=>{
+  this.setState({
+    isOpenModalBooking:false
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   render() {
-    let { allDays, allAvalableTime } = this.state;
+    let { allDays, allAvalableTime,isOpenModalBooking,dataScheuleTimeModal } = this.state;
     let { language } = this.props;
     return (
+      <>
       <div className="doctor-schedule-container">
         <div className="all-schedule">
           <select onChange={(event) => this.handleOnChangeSelect(event)}>
@@ -125,7 +160,9 @@ this.setState({
                   language === LANGUAGES.VI
                     ? item.timeTypeData.valueVi
                     : item.timeTypeData.valueEn;
-                return (<button key={index}>{timeDisplay}</button>)
+                return (<button key={index}
+                onClick={()=>this.handleClickScheduleTime(item)}
+                >{timeDisplay}</button>)
               })
             }
 
@@ -152,6 +189,15 @@ this.setState({
           </div>
         </div>
       </div>
+      <BookingModal
+      isOpenModal={isOpenModalBooking}
+      closeBookingClose={this.closeBookingClose}
+      dataTime={dataScheuleTimeModal}
+      
+      />
+
+      
+      </>
     );
   }
 }

@@ -37,6 +37,10 @@ let initWebRouters = (app) => {
     "/api/get-schedule-doctor-by-date",
     doctorController.getScheduleByDate
   );
+  router.get("/api/get-extra-infor-doctor-by-id", doctorController.getExtraInforDoctor);
+
+  router.get("/api/get-profile-infor-doctor-by-id", doctorController.getProfileInforDoctor);
+
 
   //api cua chuyen khoa
   router.post("/api/create-new-specialty", specialtyController.createSpecialty);
