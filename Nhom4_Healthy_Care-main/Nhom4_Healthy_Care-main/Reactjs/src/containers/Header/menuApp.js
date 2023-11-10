@@ -85,14 +85,12 @@ export const doctorMenu = [
         name: 'menu.admin.manage-user',
         menus:[
             { //Quan ly ke  hoach  kham benh cua bac si
-            
-               
-                  
                         //name này là con cả lớp 1
-                        name: 'menu.doctor.manage-schedule',link: '/doctor/manage-schedule'
-                        
-                   
-               
+                        name: 'menu.doctor.manage-schedule',link: '/doctor/manage-schedule'              
+            },
+            { //Quan ly benh nhan cua bac si
+                //name này là con cả lớp 1
+                name: 'menu.doctor.manage-patient',link: '/doctor/manage-patient'              
             },
         ]
     }

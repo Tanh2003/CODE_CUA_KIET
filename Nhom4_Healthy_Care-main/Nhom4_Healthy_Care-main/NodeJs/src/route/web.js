@@ -53,6 +53,8 @@ let initWebRouters = (app) => {
   );
   //api gui email
   router.post("/api/veryfy-book-appoiment",patientController.postVeryfyBookAppointment);
+  // api quan ly benh nhan
+  router.get("/api/get-list patient-for-doctor",doctorController.getListPatientForDoctor);
 
   //api cua chuyen khoa
   router.post("/api/create-new-specialty", specialtyController.createSpecialty);
