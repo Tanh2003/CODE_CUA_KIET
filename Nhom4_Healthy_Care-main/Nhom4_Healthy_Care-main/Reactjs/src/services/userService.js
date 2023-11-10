@@ -82,6 +82,14 @@ const postVerifyBookAppointment = (data) => {
 };
 
 
+
+
+const getAllPatientForDoctor = (data) => {
+  return axios.get(`/api/get-list patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`);
+};
+
+
+
 export {
   handleLoginApi,
   getAllUser,
@@ -100,5 +108,6 @@ export {
   getExtraInforDoctorById,
   getProfileDoctorById,
   postPatientBookAppointment,
-  postVerifyBookAppointment
+  postVerifyBookAppointment,
+  getAllPatientForDoctor
 };
